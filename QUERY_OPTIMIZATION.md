@@ -160,40 +160,7 @@ WHERE TO_DATE(order_month || '-01', 'YYYY-MM-DD') >= ADD_MONTHS(TRUNC(SYSDATE, '
 -- Improvement: 98% (120s → 3s)
 ```
 
-### Technique 3: Bitmap vs B-tree Indexing
 
-**Before Optimization** (Execution Time: 45 seconds)
-```sql
--- Query on low-cardinality column with full table scan
-SELECT *
-FROM orders
-WHERE status = 'COMPLETED'
-  AND order_date > DATE '2024-01-01';
-```
-
-**After Optimization** (Execution Time: 8 seconds)
-```sql
--- Create bitmap index for low-cardinality column
-CREATE BITMAP INDEX idx_orders_status_bitmap
-    ON orders(status)
-    LOCAL;
-
--- Create B-tree index for high-cardinality date
-CREATE INDEX idx_orders_date
-    ON orders(order_date)
-    LOCAL;
-
--- Query automatically uses bitmap index
-SELECT *
-FROM orders
-WHERE status = 'COMPLETED'
-  AND order_date > DATE '2024-01-01';
-
--- Bitmap indexes are highly efficient for AND/OR operations
--- Improvement: 82% (45s → 8s)
-```
-
----
 
 ## Hive Optimization
 
@@ -552,82 +519,6 @@ GROUP BY event_type;
 
 ---
 
-## Cross-Platform Best Practices
-
-### General Optimization Principles
-
-1. **Always Gather Statistics**
-```sql
--- Oracle
-EXEC DBMS_STATS.GATHER_TABLE_STATS('SCHEMA', 'TABLE_NAME', CASCADE => TRUE);
-
--- Hive
-ANALYZE TABLE table_name COMPUTE STATISTICS FOR COLUMNS;
-
--- Trino
-ANALYZE table_name;
-
--- Impala
-COMPUTE STATS table_name;
-```
-
-2. **Partition Large Tables**
-- Use date-based partitioning for time-series data
-- Aim for 50GB-200GB per partition
-- Enable dynamic partition pruning
-
-3. **Choose Right File Format**
-- **OLTP**: Row-oriented (Oracle B-tree)
-- **OLAP**: Column-oriented (ORC, Parquet)
-- **Streaming**: Avro, Protobuf
-
-4. **Index Strategy**
-- **High cardinality**: B-tree indexes
-- **Low cardinality**: Bitmap indexes
-- **Covering indexes**: Include all query columns
-
-5. **Join Optimization**
-- Always join on indexed/bucketed columns
-- Put smallest table first in join order
-- Use broadcast joins for dimension tables
-
-### Performance Monitoring
-
-```sql
--- Oracle: Execution plan
-EXPLAIN PLAN FOR <query>;
-SELECT * FROM TABLE(DBMS_XPLAN.DISPLAY);
-
--- Hive: Execution plan
-EXPLAIN EXTENDED <query>;
-
--- Trino: Query analysis
-EXPLAIN ANALYZE <query>;
-
--- Impala: Query profile
-PROFILE;
-SUMMARY;
-```
-
----
-
-## Summary
-
-| Optimization | Oracle | Hive | Trino | Impala | Avg |
-|-------------|--------|------|-------|--------|-----|
-| **Partitioning** | 84% | 72% | N/A | 75% | 77% |
-| **Indexing** | 82% | N/A | N/A | N/A | 82% |
-| **File Format** | N/A | 72% | N/A | 77% | 75% |
-| **Materialized Views** | 98% | N/A | N/A | N/A | 98% |
-| **Bucketing/Clustering** | N/A | 72% | N/A | N/A | 72% |
-| **Predicate Pushdown** | N/A | N/A | 77% | N/A | 77% |
-| **Runtime Filters** | N/A | N/A | 73% | 78% | 76% |
-| **Statistics/CBO** | 75% | 75% | N/A | N/A | 75% |
-| **Overall Average** | 85% | 73% | 75% | 77% | **77%** |
-
-**Final Result: 70% average improvement across all engines and query types**
-
----
 
 **Document Version**: 1.0  
 **Last Updated**: February 2026  
