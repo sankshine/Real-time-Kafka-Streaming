@@ -10,7 +10,6 @@ This document details the optimization techniques that achieved **70% reduction 
 2. [Hive Optimization](#hive-optimization)
 3. [Trino Optimization](#trino-optimization)
 4. [Impala Optimization](#impala-optimization)
-5. [Cross-Platform Best Practices](#cross-platform-best-practices)
 
 ---
 
