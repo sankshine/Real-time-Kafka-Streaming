@@ -10,11 +10,10 @@
 Enterprise real-time data platform processing **15TB/day** through Apache Kafka streaming pipelines integrated with ELK stack observability, with query optimization across Oracle, Hive, Trino, and Impala achieving **70% performance improvement**.
 
 ### Business Impact
-- **Streaming Throughput**: 500K events/second sustained, 2M peak
+- **Streaming Throughput**: 500K events/second sustained
 - **Query Performance**: 70% reduction in execution time
 - **Latency**: Sub-second data availability (p99 < 800ms)
 - **Cost Savings**: 45% reduction in compute costs
-- **Uptime**: 99.95% platform availability
 
 ---
 
