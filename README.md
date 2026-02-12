@@ -28,6 +28,27 @@ DATA SOURCES → KAFKA CLUSTER → PYTHON CONSUMERS → ELK STACK → OPTIMIZED 
                RF=3, 6 Brokers                   Kibana          70% Faster
 ```
 
+                  ┌─────────────────┐
+                  │KAFKA_STREAMING.md│ 
+                  │  (Architecture) │
+                  └────────┬────────┘
+                           │
+         ┌─────────────────┼─────────────────┐
+         │                 │                 │
+         ▼                 ▼                 ▼
+┌─────────────────┐ ┌───────────────┐ ┌───────────────┐
+│enrichment_consu-│ │ELK_INTEGRATION│ │QUERY_OPTIMIZA-│
+│mer.py           │ │.md            │ │TION.md        │
+│(The Worker)     │ │(Monitoring)   │ │(Speed Tuning) │
+└─────────────────┘ └───────────────┘ └───────────────┘
+         │                 │                 │
+         └─────────────────┼─────────────────┘
+                           │
+                           ▼
+                  ┌─────────────────┐
+                  │   PRODUCTION    │
+                  │    SYSTEM       │
+                  └─────────────────┘
 ---
 
 ## 📂 Repository Contents
@@ -41,7 +62,7 @@ DATA SOURCES → KAFKA CLUSTER → PYTHON CONSUMERS → ELK STACK → OPTIMIZED 
 ### ELK Integration (`elk-integration/`)
 - **Logstash**: Kafka → Elasticsearch pipelines
 - **Elasticsearch**: Index templates & ILM policies
-- **Kibana**: 80+ dashboards and alerting rules
+- **Kibana**: Dashboards and alerting rules
 
 ### Query Optimization (`query-optimization/`)
 - **Oracle**: Partitioning, indexing, materialized views
@@ -49,18 +70,7 @@ DATA SOURCES → KAFKA CLUSTER → PYTHON CONSUMERS → ELK STACK → OPTIMIZED 
 - **Trino**: Predicate pushdown, dynamic filtering
 - **Impala**: Parquet, runtime filters, code generation
 
----
 
-## 📊 Performance Metrics
-
-| Metric | Result |
-|--------|--------|
-| **Streaming Throughput** | 500K msg/sec sustained |
-| **Query Improvement** | 70% faster (avg) |
-| **End-to-End Latency** | p99: 800ms |
-| **ELK Indexing Rate** | 50K docs/sec |
-
----
 
 ## 🚀 Quick Start
 
@@ -79,7 +89,4 @@ python kafka-streaming/consumers/enrichment_consumer.py
 
 See full documentation in `docs/` directory.
 
----
 
-**Author**: Senior Data Engineer | Streaming Architect  
-**Status**: ✅ Production | 📈 15TB/day Processing
