@@ -20,35 +20,11 @@ Enterprise real-time data platform processing **15TB/day** through Apache Kafka 
 
 ## 🏗️ Architecture
 
-```
-DATA SOURCES → KAFKA CLUSTER → PYTHON CONSUMERS → ELK STACK → OPTIMIZED DATA STORES
-                    ↓                                  ↓              ↓
-               150+ Topics                      Elasticsearch    Oracle/Hive
-               1200 Partitions                   Logstash        Trino/Impala
-               RF=3, 6 Brokers                   Kibana          70% Faster
-```
-
-                  ┌─────────────────┐
-                  │KAFKA_STREAMING.md│ 
-                  │  (Architecture) │
-                  └────────┬────────┘
-                           │
-         ┌─────────────────┼─────────────────┐
-         │                 │                 │
-         ▼                 ▼                 ▼
-┌─────────────────┐ ┌───────────────┐ ┌───────────────┐
-│enrichment_consu-│ │ELK_INTEGRATION│ │QUERY_OPTIMIZA-│
-│mer.py           │ │.md            │ │TION.md        │
-│(The Worker)     │ │(Monitoring)   │ │(Speed Tuning) │
-└─────────────────┘ └───────────────┘ └───────────────┘
-         │                 │                 │
-         └─────────────────┼─────────────────┘
-                           │
-                           ▼
-                  ┌─────────────────┐
-                  │   PRODUCTION    │
-                  │    SYSTEM       │
-                  └─────────────────┘
+    ┌─────────────┐    ┌──────────────┐    ┌─────────────┐    ┌──────────────┐
+    │   KAFKA     │───▶│  enrichment │───▶│     ELK     │───▶│  OPTIMIZED   │
+    │  STREAMING  │    │  consumer.py │    │   STACK     │    │    QUERIES   │
+    │  15TB/day   │    │ 500K msg/sec │    │ 50K docs/sec│    │  70% faster  │
+    └─────────────┘    └──────────────┘    └─────────────┘    └──────────────┘
 ---
 
 ## 📂 Repository Contents
