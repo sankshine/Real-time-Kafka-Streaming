@@ -21,8 +21,8 @@ Complete architectural guide for the Apache Kafka streaming platform processing 
 
 ```yaml
 Kafka Cluster:
-  Brokers: 6 nodes
-  ZooKeeper: 5-node ensemble
+  Brokers: 6 nodes #the worker, an individula kafka server
+  ZooKeeper: 5-node ensemble # Maintains a registry of active brokers, Performs leader elections for partitions when a broker fails, Sends topology changes to brokers so they know about new/dead members
   Replication Factor: 3
   Min In-Sync Replicas: 2
   
@@ -51,8 +51,8 @@ Consumer Groups:
 │                      PRODUCER TIER                              │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐        │
 │  │ Application  │  │   CDC via    │  │   Batch      │        │
-│  │   Events     │  │   Debezium   │  │  Ingestion   │        │
-│  │ (REST APIs)  │  │  (Postgres)  │  │   (S3/FTP)   │        │
+│  │   Events     │  │              │  │  Ingestion   │        │
+│  │ (REST APIs)  │  │  (Postgres)  │  │              │        │
 │  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘        │
 │         │                  │                  │                 │
 │         └──────────────────┴──────────────────┘                 │
